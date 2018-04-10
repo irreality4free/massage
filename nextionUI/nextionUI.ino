@@ -32,6 +32,9 @@ int b3_st = 0;
 int period = 150;
 
 long current_time = 0;
+int pressure = 0;
+int freq = 0;
+int Time = 0;
 
 
 
@@ -67,25 +70,33 @@ void loop() {
   if (message == "65 4 5 1 ffff ffff ffff") {
     b1_st = !b1_st;
     digitalWrite(b1, b1_st);
-  }
-
-  if (message == "65 4 6 1 ffff ffff ffff") {
-    b2_st = !b2_st;
-    digitalWrite(b2, b2_st);
-  }
-
-  if (message == "65 4 7 1 ffff ffff ffff") {
-    b3_st = !b3_st;
-    digitalWrite(b3, b3_st);
+    //    Serial.println(b1_st);
   }
 
 
+ if (message == "65 3 7 1 ffff ffff ffff" || message == "65 3 4 1 ffff ffff ffff") {
+      pressure = myNextion.getComponentValue("page3.n0");
+      Serial.print("pressure = ");
+      Serial.println(pressure);
+  }
 
+
+  if (message == "65 3 8 1 ffff ffff ffff" || message == "65 3 5 1 ffff ffff ffff") {
+      freq = myNextion.getComponentValue("page3.n1");
+      Serial.print("frequency = ");
+      Serial.println(freq);
+  }
+
+
+  if (message == "65 3 6 1 ffff ffff ffff" || message == "65 3 9 1 ffff ffff ffff") {
+      Time = myNextion.getComponentValue("page3.n2");
+      Serial.print("time = ");
+      Serial.println(Time);
+  }
 
 
  
  if (millis - current_time > period){
-  Serial.println("tes");
     int slid1 = myNextion.getComponentValue("page4.h0");
      current_time = millis();
     if (s1 != slid1) {
@@ -108,7 +119,11 @@ void loop() {
  }
   
 
- 
+  //65 4 5 1 ffff ffff ffff
+  //65 4 5 0 ffff ffff ffff
+
+  //65 4 3 1 ffff ffff ffff
+  //65 4 3 0 ffff ffff ffff
 
 
   if (message != "") { // if a message is received...
@@ -118,4 +133,60 @@ void loop() {
 // int slid1 = myNextion.getComponentValue("page4.h0");
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  if (message == "65 4 1 1 ffff ffff ffff" ||  message == "65 4 5 0 ffff ffff ffff") {
+//    int slid1 = myNextion.getComponentValue("page4.h0");
+//    if (s1 != slid1) {
+//      s1 = slid1;
+//      analogWrite(s1_pin, s1);
+//      Serial.print("s1 = ");
+//      Serial.println(s1);
+//    }
+//  }
+//
+//  if (message == "65 4 3 1 ffff ffff ffff" ||  message == "65 4 3 0 ffff ffff ffff") {
+//    int slid2 = myNextion.getComponentValue("page4.h1");
+//    if (s2 != slid2) {
+//      s2 = slid2;
+//      analogWrite(s2_pin, s2);
+//      Serial.print("s2 = ");
+//      Serial.println(s2);
+//    }
+//  }
 
