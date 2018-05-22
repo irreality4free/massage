@@ -1,12 +1,8 @@
-/*
 
-  Ricardo Mena C
-  ricardo@crcibernetica.com
-  http://crcibernetica.com
 
-  This example code is in public domain
 
-*/
+
+
 //#include <RemoteSwitch.h>
 #include <SoftwareSerial.h>
 #include <Nextion.h>
@@ -20,8 +16,8 @@ int s2 = 0;
 
 
 int s1_pin = 11;
-int s2_pin = 10;
-int b1 = 9;
+int s2_pin = 9;
+int b1 = 10;
 int b2 = 8;
 int b3 = 7;
 
@@ -45,9 +41,12 @@ Nextion myNextion(nextion, 9600); //create a Nextion object named myNextion usin
 
 void setup() {
   Serial.begin(9600);
+  
+  TCCR1A = TCCR1A & 0xe0 | 1;
+  TCCR1B = TCCR1B & 0xe0 | 0x09;
   myNextion.init();
-  pinMode(s1_pin, OUTPUT);
-  pinMode(s2_pin, OUTPUT);
+//  pinMode(s1_pin, OUTPUT);
+//  pinMode(s2_pin, OUTPUT);
   pinMode(b1, OUTPUT);
   pinMode(b2, OUTPUT);
   pinMode(b3, OUTPUT);
@@ -67,6 +66,10 @@ void loop() {
   
 
   String message = myNextion.listen(); //check for message
+//  Serial.println(message);
+  if (message != "") { // if a message is received...
+    Serial.println(message); //...print it out
+  }
   if (message == "65 4 5 1 ffff ffff ffff") {
     b1_st = !b1_st;
     digitalWrite(b1, b1_st);
@@ -96,7 +99,7 @@ void loop() {
 
 
  
- if (millis - current_time > period){
+ if (millis() - current_time > period){
     int slid1 = myNextion.getComponentValue("page4.h0");
      current_time = millis();
     if (s1 != slid1) {
@@ -126,9 +129,7 @@ void loop() {
   //65 4 3 0 ffff ffff ffff
 
 
-  if (message != "") { // if a message is received...
-    Serial.println(message); //...print it out
-  }
+  
 
 // int slid1 = myNextion.getComponentValue("page4.h0");
 }
@@ -189,4 +190,3 @@ void loop() {
 //      Serial.println(s2);
 //    }
 //  }
-
