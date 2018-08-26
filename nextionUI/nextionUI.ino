@@ -77,16 +77,16 @@ void setup() {
 
 void loop() {
   //если кнопка старт нажата ( в интерфейсе дисплея) то подаем на драйвер шим в противном случае выкл шим
-  if (start_st) {
-    analogWrite(s2_pin, s2);
-    analogWrite(s1_pin, s1);
-//    Serial.println("ON");
-  }
-  else {
-    analogWrite(s2_pin, 0);
-    analogWrite(s1_pin, 0);
-//    Serial.println("OFF");
-  }
+//  if (start_st) {
+////    analogWrite(s2_pin, s2);
+//    analogWrite(s1_pin, s1);
+////    Serial.println("ON");
+//  }
+//  else {
+////    analogWrite(s2_pin, 0);
+//    analogWrite(s1_pin, 0);
+////    Serial.println("OFF");
+//  }
 
 
 
@@ -111,12 +111,20 @@ void loop() {
     if (strt_s == 1) {
       start_st = true;
       motor_on = true;
+      long freq = myNextion.getComponentValue("page4.h0");
+      int high_speed = myNextion.getComponentValue("page4.h2");
+      int low_speed = myNextion.getComponentValue("page4.h3");
+      s1=myNextion.getComponentValue("page4.n0");
+      analogWrite(s1_pin, s1);
       i = 50;
 
       n = 100;
+      String com = "com:"+high_speed+':'+low_speed+':'+freq;
+      Serial.println(com);
       Serial.println("ON");
     }
     else {
+      analogWrite(s1_pin, 0);
       start_st = false;
       Serial.println("OFF");
     }
@@ -154,6 +162,7 @@ void loop() {
     current_time = millis();
     if (s1 != slid1) {
       s1 = slid1;
+      analogWrite(s1_pin, s1);
       //      analogWrite(s1_pin, s1);
       Serial.print("s1 = ");
       Serial.println(s1);
