@@ -1,6 +1,11 @@
-int Step = 4;
-int dir = 5;
+#include <SoftwareSerial.h>
+
+int Step = 11;
+int dir = 12;
 bool state = false;
+
+
+SoftwareSerial mySerial(2, 3); // RX, TXSoftwareSerial mySerial(6, 5); // RX, TX
 
 void setup() {
   // put your setup code here, to run once:
@@ -8,6 +13,7 @@ void setup() {
   pinMode(dir, OUTPUT);
   digitalWrite(dir, LOW);
   Serial.begin(9600);
+  mySerial.begin(9600);
 }
 
 int start_del = 80;
@@ -17,12 +23,15 @@ int count = max_count;
 int dir_ = 0;
 int m_speed = 80;
 bool last_state = false;
+int high_speed = 100;
+int low_speed=80;
+long freq;
 
 
 
 void loop() {
-  if (Serial.available() > 0) {
-    String com = Serial.readString();
+  if (mySerial.available() > 0) {
+    String com = mySerial.readString();
     int str_l = com.length();
     Serial.println(com);
     
@@ -30,13 +39,13 @@ void loop() {
     if (com.substring(0, 4) == "com:") {
       int str_l = com.length();
       int last_separator=com.lastIndexOf(':');
-    long freq = com.substring(com.lastIndexOf(':')+1,com.length()).toInt();   
+    freq = com.substring(com.lastIndexOf(':')+1,com.length()).toInt();   
     com = com.substring(0,com.lastIndexOf(':'));
     last_separator=com.lastIndexOf(':');
-    int low_speed = com.substring(com.lastIndexOf(':')+1,com.length()).toInt();
+    low_speed = com.substring(com.lastIndexOf(':')+1,com.length()).toInt();
     com = com.substring(0,com.lastIndexOf(':'));
     last_separator=com.lastIndexOf(':');
-    int high_speed = com.substring(com.lastIndexOf(':')+1,com.length()).toInt();
+    high_speed = com.substring(com.lastIndexOf(':')+1,com.length()).toInt();
     if(high_speed<5)high_speed=5;
     Serial.print("freq - ");
     Serial.println(freq);
@@ -45,6 +54,7 @@ void loop() {
     Serial.print("high_speed - ");
     Serial.println(high_speed);
       max_count = freq;
+      if(start_del<low_speed)del = low_speed;
       
     }
 
@@ -79,6 +89,7 @@ void loop() {
     if(count == 0 && del <= high_speed){
       del=low_speed;
       count = max_count;
+//      Serial.println("reached");
     }
     digitalWrite(Step, HIGH);
     delayMicroseconds(del);
@@ -94,11 +105,3 @@ void loop() {
 
 
 
-
-//    if (count==0 && dir_==1){
-//    del++;
-//    count = max_count;
-//  }
-//  if(del<5)dir_=1;
-//  if(del>80)dir_=0;
-//
