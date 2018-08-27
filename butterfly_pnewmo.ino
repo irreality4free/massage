@@ -53,8 +53,11 @@ void loop() {
     Serial.println(low_speed);
     Serial.print("high_speed - ");
     Serial.println(high_speed);
+    
+      Serial.println("motor ON");
       max_count = freq;
       if(start_del<low_speed)del = low_speed;
+      state = true;
       
     }
 
@@ -99,9 +102,4 @@ void loop() {
     if (count < 0)count = max_count;
   }
 }
-
-
-
-
-
 
