@@ -48,11 +48,13 @@ bool motor_on = true;
 //подключаем дисплей через софтварный сериальник
 
 SoftwareSerial nextion(2, 3);// Nextion TX to pin 2 and RX to pin 3 of Arduino
+//SoftwareSerial mySerial(10,11);
 
 Nextion myNextion(nextion, 9600); //create a Nextion object named myNextion using the nextion serial port @ 9600bps
 //Nextion myNextion(Serial, 9600); //create a Nextion object named myNextion using the nextion serial port @ 9600bps
 void setup() {
   Serial.begin(9600);
+//  mySerial.begin(9600);
 //  timer_init_ISR_20KHz(TIMER_DEFAULT);    //starts timer
 
 
@@ -96,7 +98,7 @@ void loop() {
   String message = myNextion.listen(); //check for message
   //  Serial.println(message);
   if (message != "") { // if a message is received...
-    Serial.println(message); //...print it out
+//    Serial.println(message); //...print it out
   }
   if (message == "65 4 5 1 ffff ffff ffff") {
     b1_st = !b1_st;
@@ -111,25 +113,38 @@ void loop() {
     if (strt_s == 1) {
       start_st = true;
       motor_on = true;
-      long freq = myNextion.getComponentValue("page4.h0");
-      int high_speed = myNextion.getComponentValue("page4.h2");
-      int low_speed = myNextion.getComponentValue("page4.h3");
-      s1=myNextion.getComponentValue("page4.n0");
-      analogWrite(s1_pin, s1);
+      long freq = myNextion.getComponentValue("page4.n0");
+      int high_speed = myNextion.getComponentValue("page4.n2");
+      int low_speed = myNextion.getComponentValue("page4.n3");
+      s2=myNextion.getComponentValue("page4.n1");
+      analogWrite(s2_pin, s2);
       i = 50;
 
       n = 100;
-      String com = "com:"+high_speed+':'+low_speed+':'+freq;
+      String com = "com:";
+      com = com+high_speed+':'+low_speed+':'+freq;
+      
+//      Serial.print("freq - ");
+//      Serial.println(freq);
+//
+//      Serial.print("high_speed - ");
+//      Serial.println(high_speed);
+//
+//      Serial.print("low_speed - ");
+//      Serial.println(low_speed);
+
       Serial.println(com);
-      Serial.println("ON");
+
+      
+//      Serial.print("ON\n");
     }
     else {
-      analogWrite(s1_pin, 0);
+      analogWrite(s2_pin, 0);
       start_st = false;
-      Serial.println("OFF");
+      Serial.print("OFF\n");
     }
 
-    Serial.println(start_st);
+//    Serial.println(start_st);
   }
 
 //тут получаем значения со слайдеров
@@ -142,8 +157,8 @@ void loop() {
 
   if (message == "65 3 8 1 ffff ffff ffff" || message == "65 3 5 1 ffff ffff ffff") {
     freq = myNextion.getComponentValue("page3.n1");
-    Serial.print("com:);
-    Serial.println(freq);
+//    Serial.print("com:");
+//    Serial.println(freq);
 //    Serial.print("frequency = ");
 //    Serial.println(freq);
   }
@@ -164,8 +179,8 @@ void loop() {
       s1 = slid1;
       analogWrite(s1_pin, s1);
       //      analogWrite(s1_pin, s1);
-      Serial.print("s1 = ");
-      Serial.println(s1);
+//      Serial.print("s1 = ");
+//      Serial.println(s1);
 
     }
 
@@ -175,8 +190,8 @@ void loop() {
     if (s2 != slid2) {
       s2 = slid2;
       //      analogWrite(s2_pin, s2);
-      Serial.print("s2 = ");
-      Serial.println(s2);
+//      Serial.print("s2 = ");
+//      Serial.println(s2);
     }
   }
 
