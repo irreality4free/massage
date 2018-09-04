@@ -1,3 +1,4 @@
+
 #include <SoftwareSerial.h>
 
 int Step = 11;
@@ -11,7 +12,7 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(Step, OUTPUT);
   pinMode(dir, OUTPUT);
-  digitalWrite(dir, LOW);
+  digitalWrite(dir, HIGH);
   Serial.begin(9600);
   mySerial.begin(9600);
 }
@@ -46,7 +47,8 @@ void loop() {
     com = com.substring(0,com.lastIndexOf(':'));
     last_separator=com.lastIndexOf(':');
     high_speed = com.substring(com.lastIndexOf(':')+1,com.length()).toInt();
-    if(high_speed<5)high_speed=5;
+    if(high_speed<30)high_speed=30;
+    if(low_speed<30)low_speed=30;
     Serial.print("freq - ");
     Serial.println(freq);
     Serial.print("Low_speed - ");
@@ -57,6 +59,7 @@ void loop() {
       Serial.println("motor ON");
       max_count = freq;
       if(start_del<low_speed)del = low_speed;
+      last_state = state;
       state = true;
       
     }
