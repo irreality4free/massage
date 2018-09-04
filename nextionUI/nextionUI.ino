@@ -44,6 +44,11 @@ long n = 800;
 
 bool motor_on = true;
 
+int start_del=500;
+long current_del=0;
+int last_state=0;
+
+
 
 //подключаем дисплей через софтварный сериальник
 
@@ -72,6 +77,7 @@ void setup() {
   digitalWrite(b2, b2_st);
   digitalWrite(b3, b3_st);
   digitalWrite(dir, LOW);
+  digitalWrite(s2_pin, LOW);
 
 
 
@@ -108,8 +114,13 @@ void loop() {
 
 
 // тут ловим сообщение при тыкании в кнопку старт и получив сообщение проверяем состояние кнопки через методы библиотеки дисплея
-  if (message == "65 4 9 1 ffff ffff ffff") {
+  if (message == "65 4 9 1 ffff ffff ffff" || millis()-current_del>start_del) {
+    
+    current_del=millis();
     strt_s = myNextion.getComponentValue("page4.bt3");
+
+    if (last_state!=strt_s){
+    last_state=strt_s;
     if (strt_s == 1) {
       start_st = true;
       motor_on = true;
@@ -145,6 +156,7 @@ void loop() {
     }
 
 //    Serial.println(start_st);
+    }
   }
 
 //тут получаем значения со слайдеров
